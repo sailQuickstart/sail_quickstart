@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/buble.css"> -->
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+    loadSidebar: true,
+    name: '',
+    repo: '',
+    plugins: [
+      function (hook, vm) {
+        hook.beforeEach(function (content) {
+          //格式：ENCRYPTED.加密方式(加密内容)
+          let matchResult = content.match(/ENCRYPTED\.(\w+)\((\S+)\)/);
+          if (matchResult) {
+            //等待访问者输入密钥返回解密后的内容
+            return inputSecretKeydecryptContent(matchResult[1], matchResult[2]);
+          }
+          return content;
+        });
+      }
+    ]
+  }
+
+
+  /**
+   * @description: 等待用户输入密钥后使用指定算法解密
+   * @param {string} algorithm 算法
+   * @param {string} content 文档内容
+   * @return {string} 解密后文档内容
+   */
+  function inputSecretKeydecryptContent(algorithm, content) {
+      if (!CryptoJS[algorithm]) {
+          return "# 不支持的加密算法 `~_~`";
+      }
+      let secretKey = prompt('请输入密钥：');
+      try {
+          return CryptoJS[algorithm].decrypt(content, secretKey).toString(CryptoJS.enc.Utf8);
+      } catch (err) {
+          return "# 解密失败 `~_~`";
+      }
+  }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+    <script src="./js/crypto-js.min.js"></script>
+  <script src="./js/docsify-decrypt-content.js"></script>
+</body>
+</html>
