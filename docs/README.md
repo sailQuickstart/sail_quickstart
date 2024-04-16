@@ -8,4 +8,6 @@
 
 文档维护：许同樵
 
+https://sailquickstart.github.io/sail_quickstart/
+
 Powered by docsify
